@@ -107,7 +107,6 @@ class Member
 	 *
 	 * @Assert\NotBlank()
 	 * @Assert\Type("string")
-	 * @ORM\Column(type="text")
 	 */
 	protected $bio;
 
@@ -581,9 +580,10 @@ class Member
 				->atPath('logoFile')
 				->addViolation();
 		}
-		
-		if(strlen(strip_tags($this->getBio())) > 250) {
-			$context->buildViolation('Limite de 250 caractères dépassée.')
+
+		$lenBio = mb_strlen(strip_tags($this->getBio()));
+		if ($lenBio > 250) {
+			$context->buildViolation('Veuillez ne pas dépasser 250 caractères.')
 				->atPath('bio')
 				->addViolation();
 		}

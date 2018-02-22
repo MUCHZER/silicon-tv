@@ -1,6 +1,8 @@
 import 'tinymce/tinymce';
 import 'tinymce/themes/modern/theme';
 
+var charsLeft = document.getElementById('charsLeft');
+
 window.tinymce.init({
   selector: 'textarea',
   extended_valid_elements: 'strong',
@@ -18,39 +20,20 @@ window.tinymce.init({
     editor.on('change', function () {
       editor.save();
     });
-    editor.on('keyup', function (element) {
-      console.log(element);
-      var count = CountCharacters();
-      var counterdiv = document.getElementById('count_char');
-      if(counterdiv) {
-        counterdiv.innerText = 'Caractères: ' + count;
+
+    editor.on('keypress keyup change', function () {
+      var body = editor.getBody(),
+        content = tinymce.trim(body.innerText || body.textContent),
+        length = content.length,
+        rest = 250 - length;
+
+      if (rest > 0) {
+        charsLeft.innerHTML = ' - '+rest+' restants.';
       } else {
-        var div = document.createElement("div");
-        div.id = 'count_char';
-        div.className += 'mce-container mce-flow-layout-item mce-last mce-btn-group pull-right';
-        div.appendChild(document.createTextNode('Characters: ' + count));
-        document.getElementById("mceu_4-body").appendChild(div);
+        charsLeft.innerHTML = ' - <br /><strong>Vous dépassez le nombre maximum autorisé, '+(-1 * rest)+' de trop.</strong>';
       }
+
+      editor.save();
     });
   }
 });
-
-function CountCharacters() {
-  var body = tinymce.activeEditor.getBody();
-  var content = tinymce.trim(body.innerText || body.textContent);
-  return content.length;
-}
-
-function ValidateCharacterLength(element) {
-  var max = 250;
-  var count = CountCharacters();
-  if (count > max) {
-    alert("Limite de " + max + " caractères dépassée.");
-    return element.preventDefault();
-  }
-}
-
-document.getElementsByTagName('form')[0].onsubmit = function(element) {
-  tinyMCE.triggerSave();
-  //ValidateCharacterLength(element);
-};

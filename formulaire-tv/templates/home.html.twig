@@ -19,9 +19,9 @@
 					<b>Attention, l'image sera redimensionné dans un format carré.</b>
 					{{ form_row(form.logoFile) }}
 					{{ form_row(form.imageFile) }}
-					
+
 					<div class="form-group">
-						{{ form_label(form.bio) }} (250 caractères maximum)
+						{{ form_label(form.bio) }} (250 caractères maximum) <span id="charsLeft"></span>
 						{{ form_errors(form.bio) }}
 						{{ form_widget(form.bio) }}
 					</div>
